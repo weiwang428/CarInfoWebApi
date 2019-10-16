@@ -85,6 +85,38 @@ namespace CarInfoWebApplication.Models
             return true;
         }
 
+        public IList<Car> ListCarInfo()
+        {
+            //_dbContext.Cars.Include(c => c.Descriptions);
+            return _dbContext.Cars.ToList();               
+        }
+
+        public Car FindCarByDes(int descriptionId)
+        {
+            var car = _dbContext.Cars.Where(c => c.Descriptions.Any(d => d.Id == descriptionId)).FirstOrDefault();
+            return car;
+        }
+
+        public bool DeleteCar(int carId)
+        {
+            var car = _dbContext.Cars.Where(c => c.CarId == carId).FirstOrDefault();
+            if (car == null)
+                return false;
+            _dbContext.Cars.Remove(car);
+            _dbContext.SaveChanges();
+            return true;
+        }
+
+
+
+
+
+
+
+
+
+
+
 
     }
 }

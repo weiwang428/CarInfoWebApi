@@ -43,5 +43,37 @@ namespace CarInfoWebApplication.Controllers
             return Content("done");
 
         }
+
+        public ContentResult List()
+        {
+            var ls = _repository.ListCarInfo();
+            return Content(JsonConvert.SerializeObject(ls));
+
+        }
+
+        public ContentResult Delete(int id)
+        {
+            var ls = _repository.DeleteCar(id);
+            return Content(ls.ToString());
+
+        }
+
+        public ContentResult FindCar(int id)
+        {
+            var ls = _repository.FindCarByDes(id);
+            return Content(JsonConvert.SerializeObject(ls));
+        }
+
+
+
+
+
+
+
+
+
+
+
+
     }
 }

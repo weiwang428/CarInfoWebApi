@@ -25,7 +25,6 @@ namespace CarInfoWebApplication.CarInfoDbContext
         {
             if (_instance == null)
                 _instance = new CarDbContext();
-
             return _instance;
         }
 

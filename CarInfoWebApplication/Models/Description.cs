@@ -13,5 +13,6 @@ namespace CarInfoWebApplication.Models
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }
         public string Content { get; set; }
+        public Car Car { get; set; }
     }
 }

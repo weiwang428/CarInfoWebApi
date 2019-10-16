@@ -44,12 +44,18 @@ namespace CarInfoWebApplication.Controllers
 
         }
 
+        //public JsonResult List()
+        //{
+        //    var ls = _repository.ListCarInfo();
+        //    return Json(ls);
+        //}
+
         public ContentResult List()
         {
             var ls = _repository.ListCarInfo();
             return Content(JsonConvert.SerializeObject(ls));
-
         }
+
 
         public ContentResult Delete(int id)
         {
@@ -64,7 +70,11 @@ namespace CarInfoWebApplication.Controllers
             return Content(JsonConvert.SerializeObject(ls));
         }
 
-
+        public ContentResult Add(int carId, string content)
+        {
+            var result = _repository.AddDescriptionToCar(carId, content);
+            return Content(result.ToString());
+        }
 
 
 

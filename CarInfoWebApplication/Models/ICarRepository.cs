@@ -14,5 +14,6 @@ namespace CarInfoWebApplication.Models
         IList<Car> ListCarInfo();
         bool DeleteCar(int carId);
         Car FindCarByDes(int descriptionId);
+        bool AddDescriptionToCar(int carId, string content);
     }
 }

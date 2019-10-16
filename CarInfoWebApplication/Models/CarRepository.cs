@@ -85,10 +85,23 @@ namespace CarInfoWebApplication.Models
             return true;
         }
 
+        public bool AddDescriptionToCar(int carId, string content)
+        {
+            var car = _dbContext.Cars.Include("Descriptions").Where(c => c.CarId == carId).FirstOrDefault();
+            if ( car == null)
+                return false;
+            var result = car.Descriptions.Where(d => d.Content.Equals(content)).FirstOrDefault();
+            if (result != null)
+                return false;
+            car.Descriptions.Add(new Description() { Content = content });
+            _dbContext.SaveChanges();
+            return true;
+        }
+
         public IList<Car> ListCarInfo()
         {
-            //_dbContext.Cars.Include(c => c.Descriptions);
-            return _dbContext.Cars.ToList();               
+            return _dbContext.Cars.Include("Descriptions").ToList();
+            //return _dbContext.Cars.ToList();               
         }
 
         public Car FindCarByDes(int descriptionId)

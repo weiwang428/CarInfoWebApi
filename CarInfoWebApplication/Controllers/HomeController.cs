@@ -4,12 +4,19 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using CarInfoWebApplication.Models;
+using Newtonsoft.Json;
 
 namespace CarInfoWebApplication.Controllers
 {
     public class HomeController : Controller
     {
-        CarRepository _repository = new CarRepository();
+        //CarRepository _repository = new CarRepository();
+        ICarRepository _repository;
+        public HomeController(ICarRepository repo)
+        {
+            _repository = repo;
+        }
+
         public ActionResult Index()
         {
             ViewBag.Title = "Home Page";
@@ -24,6 +31,17 @@ namespace CarInfoWebApplication.Controllers
             return View();
         }
 
+        public ContentResult LoadJson()
+        {
+            IList<Car> ls = _repository.LoadCarInfoFromFile("");
+            return Content(JsonConvert.SerializeObject(ls));
 
+        }
+        public ContentResult WriteJson()
+        {
+            _repository.WriteCarInfoIntoFile("");
+            return Content("done");
+
+        }
     }
 }

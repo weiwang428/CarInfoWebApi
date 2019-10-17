@@ -96,25 +96,7 @@ namespace CarInfoWebApplication.Models
             }           
         }
 
-        /// <summary>
-        /// Add description to a given car.
-        /// </summary>
-        /// <param name="carId">The car you want to add description.</param>
-        /// <param name="content">The content of the description you want to add.</param>
-        /// <returns>True if the add sucessfully, otherwise false.</returns>
-        public bool AddDescriptionToCar(int carId, string content)
-        {
-            var car = _dbContext.Cars.Include("Descriptions").Where(c => c.CarId == carId).FirstOrDefault();
-            if ( car == null)
-                return false;
-            var result = car.Descriptions.Where(d => d.Content.Equals(content)).FirstOrDefault();
-            if (result != null)
-                return false;
-            car.Descriptions.Add(new Description() { Content = content });
-            _dbContext.SaveChanges();
-            return true;
-        }
-
+        
         /// <summary>
         /// List car information, includes describtions.
         /// </summary>
@@ -150,36 +132,62 @@ namespace CarInfoWebApplication.Models
             return true;
         }
 
-        //public bool UpdateCar(Car car)
-        //{
-        //    if (car == null)
-        //        return false;
-        //    var result = _dbContext.Cars.Where(c => c.CarId == car.CarId).FirstOrDefault();
-        //    if (result == null)
-        //        return false;
-        //    Car newCar = new Car();
-        //    newCar.Brand == car.Brand;
-        //    //newCar.Color == car.Color;
-        //    //newCar.Price == car.Price;
-        //    //newCar.Descriptions == car.Descriptions;
-        //    result.Brand == car.Brand;
-        //    result.Color == car.Color;
-        //    result.Price == car.Price;
-        //    result.Descriptions == car.Descriptions;
-        //    _dbContext.SaveChanges();
-        //    return true;
+        /// <summary>
+        /// Update car information by using a given car object
+        /// </summary>
+        /// <param name="carId"></param>
+        /// <param name="car"></param>
+        /// <returns></returns>
+        public bool UpdateCar(int carId, Car car)
+        {
+            if (car == null)
+                return false;
+            var result = _dbContext.Cars.Where(c => c.CarId == carId).FirstOrDefault();
+            if (result == null)
+                return false;
+            result.Brand = car.Brand;
+            result.Color = car.Color;
+            result.Price = car.Price;
+            _dbContext.SaveChanges();
+            return true;
+        }
 
+        #region fuctions of description.
+        /// <summary>
+        /// Add description to a given car.
+        /// </summary>
+        /// <param name="carId">The car you want to add description.</param>
+        /// <param name="content">The content of the description you want to add.</param>
+        /// <returns>True if the add sucessfully, otherwise false.</returns>
+        public bool AddDescriptionToCar(int carId, string content)
+        {
+            var car = _dbContext.Cars.Include("Descriptions").Where(c => c.CarId == carId).FirstOrDefault();
+            if (car == null)
+                return false;
+            var result = car.Descriptions.Where(d => d.Content.Equals(content)).FirstOrDefault();
+            if (result != null)
+                return false;
+            car.Descriptions.Add(new Description() { Content = content });
+            _dbContext.SaveChanges();
+            return true;
+        }
 
-        //}
+        /// <summary>
+        /// Delete a description from database by using a give description id.
+        /// </summary>
+        /// <param name="descriptionId">The description id you want to delete.</param>
+        /// <returns>True if delete sucessfully, otherwise false.</returns>
+        public bool DeleteDescriptionOfCar(int descriptionId)
+        {
+            var des = _dbContext.Descriptions.Where(d => d.Id == descriptionId).FirstOrDefault();
+            if (des == null)
+                return false;
+            _dbContext.Descriptions.Remove(des);
+            _dbContext.SaveChanges();
+            return true;
+        }
 
-
-
-
-
-
-
-
-
+        #endregion
 
     }
 }

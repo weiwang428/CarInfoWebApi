@@ -15,6 +15,7 @@ namespace CarInfoWebApplication.Models
         bool DeleteCar(int carId);
         Car FindCarByDes(int descriptionId);
         bool AddDescriptionToCar(int carId, string content);
-        //bool UpdateCar(Car car);
+        bool UpdateCar(int carId, Car car);
+        bool DeleteDescriptionOfCar(int descriptionId);
     }
 }

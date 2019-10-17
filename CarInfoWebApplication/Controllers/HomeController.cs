@@ -10,7 +10,6 @@ namespace CarInfoWebApplication.Controllers
 {
     public class HomeController : Controller
     {
-        //CarRepository _repository = new CarRepository();
         ICarRepository _repository;
         public HomeController(ICarRepository repo)
         {
@@ -75,9 +74,18 @@ namespace CarInfoWebApplication.Controllers
             return Content(result.ToString());
         }
 
+        public ContentResult Update(int id)
+        {
+            Car newCar = new Car() { Brand = "benz", Model = "newtype", Descriptions = null };
+            var result = _repository.UpdateCar(id,newCar);
+            return Content(result.ToString());
+        }
 
-
-
+        public ContentResult DeleteDes(int id)
+        {
+            var result = _repository.DeleteDescriptionOfCar(id);
+            return Content(result.ToString());
+        }
 
 
 

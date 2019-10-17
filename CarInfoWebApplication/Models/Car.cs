@@ -1,13 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
+﻿using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Data.Entity;
 
 namespace CarInfoWebApplication.Models
 {
+    /// <summary>
+    /// Car Model, represents a Car Object. One car can have many descriptions.
+    /// </summary>
     public class Car
     {
         [Key]

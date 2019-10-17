@@ -8,12 +8,13 @@ namespace CarInfoWebApplication.Models
 {
     public interface ICarRepository
     {
-        string TestDb();
-        IList<Car> LoadCarInfoFromFile(string fileName);
-        void WriteCarInfoIntoFile(string fileName);
+        void InitDb();
+        bool LoadCarInfoFromFile(string fileName);
+        bool WriteCarInfoIntoFile(string fileName);
         IList<Car> ListCarInfo();
         bool DeleteCar(int carId);
         Car FindCarByDes(int descriptionId);
         bool AddDescriptionToCar(int carId, string content);
+        //bool UpdateCar(Car car);
     }
 }

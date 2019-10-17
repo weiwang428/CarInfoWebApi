@@ -27,21 +27,20 @@ namespace CarInfoWebApplication.Controllers
 
         public ActionResult Test()
         {
-            _repository.TestDb();
+            _repository.InitDb();
             return View();
         }
 
         public ContentResult LoadJson()
         {
-            IList<Car> ls = _repository.LoadCarInfoFromFile("");
-            return Content(JsonConvert.SerializeObject(ls));
+            var ls = _repository.LoadCarInfoFromFile("");
+            return Content(ls.ToString());
 
         }
         public ContentResult WriteJson()
         {
-            _repository.WriteCarInfoIntoFile("");
-            return Content("done");
-
+            var result = _repository.WriteCarInfoIntoFile("");
+            return Content(result.ToString());
         }
 
         //public JsonResult List()

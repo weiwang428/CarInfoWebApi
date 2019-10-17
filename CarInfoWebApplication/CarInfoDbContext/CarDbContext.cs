@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-using SQLite.CodeFirst;
+﻿using SQLite.CodeFirst;
 using System.Data.Entity;
 using CarInfoWebApplication.Models;
 

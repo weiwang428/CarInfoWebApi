@@ -1,13 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using Newtonsoft.Json;
 
 namespace CarInfoWebApplication.Models
 {
+    /// <summary>
+    /// Description Model, represents a Description Object.
+    /// </summary>
     public class Description
     {
         [Key]

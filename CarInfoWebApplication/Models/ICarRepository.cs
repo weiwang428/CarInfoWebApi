@@ -10,7 +10,7 @@ namespace CarInfoWebApplication.Models
     {
         void InitDb();
         bool LoadCarInfoFromFile(string fileName);
-        bool WriteCarInfoIntoFile(string fileName);
+        bool WriteCarInfoIntoFile();
         IList<Car> ListCarInfo();
         bool DeleteCar(int carId);
         Car FindCarByDes(int descriptionId);

@@ -3,10 +3,8 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Web;
-using System.Web.Script.Serialization;
 using CarInfoWebApplication.CarInfoDbContext;
 using Newtonsoft.Json;
-using Newtonsoft.Json.Converters;
 
 
 namespace CarInfoWebApplication.Models
@@ -14,6 +12,8 @@ namespace CarInfoWebApplication.Models
     public class CarRepository : ICarRepository
     {
         private readonly CarDbContext _dbContext;
+        private const string FILE_PATH = @"d:\config.txt";
+        //private const string FILE_PATH = Server.MapPath("config.txt");
         public CarRepository(CarDbContext db)
         {
             _dbContext = db;
@@ -37,7 +37,7 @@ namespace CarInfoWebApplication.Models
         }
 
         /// <summary>
-        /// Load data from a json file, and use the data to update the database.
+        /// Client upload a json file, server load data from the json file, and use the data to update the database.
         /// </summary>
         /// <param name="fileName">The file you want to read data.</param>
         /// <returns>True if load sucessfully, otherwise false.</returns>
@@ -45,11 +45,32 @@ namespace CarInfoWebApplication.Models
         {
             try
             {
-                string str = File.ReadAllText(@"d:\ascii.txt");
-                JavaScriptSerializer Serializers = new JavaScriptSerializer();
-                List<Car> cars = Serializers.Deserialize<List<Car>>(str);
+                HttpRequest httpRequest = HttpContext.Current.Request;
+                var file = httpRequest.Files[fileName];
+                if (file == null)
+                    return false;
+                if (File.Exists(FILE_PATH))
+                {
+                    File.Delete(FILE_PATH);
+                }
+                file.SaveAs(FILE_PATH);
+                string str = File.ReadAllText(FILE_PATH);
+                JsonSerializerSettings settings = new JsonSerializerSettings();
+                settings.Formatting = Formatting.Indented;
+                settings.NullValueHandling = NullValueHandling.Ignore;
+                var cars = JsonConvert.DeserializeObject<List<Car>>(str, settings);
                 AddCarInfoToDb(cars);
                 return true;
+
+                //string str = File.ReadAllText(@"d:\ascii.txt");
+                //JsonSerializerSettings settings = new JsonSerializerSettings();
+                //settings.Formatting = Formatting.Indented;
+                //settings.NullValueHandling = NullValueHandling.Ignore;
+                //var cars = JsonConvert.DeserializeObject<List<Car>>(str, settings);
+                ////JavaScriptSerializer Serializers = new JavaScriptSerializer();
+                ////List<Car> cars = Serializers.Deserialize<List<Car>>(str);
+                //AddCarInfoToDb(cars);
+                //return true;
             }
             catch (Exception e)
             {
@@ -75,35 +96,37 @@ namespace CarInfoWebApplication.Models
         /// <summary>
         /// Write the car information from database to a json file.
         /// </summary>
-        /// <param name="fileName">The file you want to write in.</param>
         /// <returns>True if the write sucessfully, otherwise false.</returns>
-        public bool WriteCarInfoIntoFile(string fileName)
+        public bool WriteCarInfoIntoFile()
         {
             try
             {
-                StreamWriter sw = new StreamWriter(@"d:\ascii.txt");
-                JsonSerializer serializer = new JsonSerializer();
-                serializer.Converters.Add(new JavaScriptDateTimeConverter());
-                serializer.NullValueHandling = NullValueHandling.Ignore;
-                JsonWriter writer = new JsonTextWriter(sw);
-                serializer.Serialize(writer, _dbContext.Cars.Include("Descriptions").ToList());
-                writer.Close();
+                StreamWriter sw = new StreamWriter(FILE_PATH);
+                Formatting format = Formatting.Indented;
+                sw.WriteLine(JsonConvert.SerializeObject(_dbContext.Cars.Include("Descriptions").ToList(), format));
+                //JsonSerializer serializer = new JsonSerializer();
+                //serializer.Converters.Add(new JavaScriptDateTimeConverter());
+                //serializer.NullValueHandling = NullValueHandling.Ignore;
+                //JsonWriter writer = new JsonTextWriter(sw);
+                //serializer.Serialize(writer, _dbContext.Cars.Include("Descriptions").ToList());
+                //writer.Close();
                 sw.Close();
                 return true;
-            }catch(Exception e)
+            }
+            catch (Exception)
             {
                 return false;
-            }           
+            }
         }
 
-        
+
         /// <summary>
         /// List car information, includes describtions.
         /// </summary>
         /// <returns>A list includes all cars information.</returns>
         public IList<Car> ListCarInfo()
         {
-            return _dbContext.Cars.Include("Descriptions").ToList();         
+            return _dbContext.Cars.Include("Descriptions").ToList();
         }
 
         /// <summary>
@@ -146,6 +169,7 @@ namespace CarInfoWebApplication.Models
             if (result == null)
                 return false;
             result.Brand = car.Brand;
+            result.Model = car.Model;
             result.Color = car.Color;
             result.Price = car.Price;
             _dbContext.SaveChanges();

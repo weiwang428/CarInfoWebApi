@@ -19,7 +19,6 @@ namespace CarInfoWebApplication.Controllers
         public ActionResult Index()
         {
             ViewBag.Title = "Home Page";
-
             return View();
         }
 
@@ -30,42 +29,48 @@ namespace CarInfoWebApplication.Controllers
             return View();
         }
 
-        public ContentResult LoadJson()
-        {
-            var ls = _repository.LoadCarInfoFromFile("");
-            return Content(ls.ToString());
+        //public ContentResult LoadJson()
+        //{
+        //    var ls = _repository.LoadCarInfoFromFile("");
+        //    return Content(ls.ToString());
+        //}
 
-        }
         public ContentResult WriteJson()
         {
-            var result = _repository.WriteCarInfoIntoFile("");
+            var result = _repository.WriteCarInfoIntoFile();
             return Content(result.ToString());
         }
 
-        //public JsonResult List()
-        //{
-        //    var ls = _repository.ListCarInfo();
-        //    return Json(ls);
-        //}
-
-        public ContentResult List()
+        [HttpPost]
+        public ContentResult LoadJson()
         {
-            var ls = _repository.ListCarInfo();
-            return Content(JsonConvert.SerializeObject(ls));
+            var ls = _repository.LoadCarInfoFromFile("config");
+            return Content(ls.ToString());
         }
 
+        public HttpResponseBase List()
+        {
+            Response.Clear();
+            Response.ContentType = "application/json; charset=utf-8";
+            Response.Write(JsonConvert.SerializeObject(_repository.ListCarInfo()));
+            Response.End();
+            return Response;
+        }
 
         public ContentResult Delete(int id)
         {
             var ls = _repository.DeleteCar(id);
             return Content(ls.ToString());
-
         }
 
-        public ContentResult FindCar(int id)
+        public HttpResponseBase FindCar(int id)
         {
             var ls = _repository.FindCarByDes(id);
-            return Content(JsonConvert.SerializeObject(ls));
+            Response.Clear();
+            Response.ContentType = "application/json; charset=utf-8";
+            Response.Write(JsonConvert.SerializeObject(ls));
+            Response.End();
+            return Response;
         }
 
         public ContentResult Add(int carId, string content)
@@ -76,7 +81,7 @@ namespace CarInfoWebApplication.Controllers
 
         public ContentResult Update(int id)
         {
-            Car newCar = new Car() { Brand = "benz", Model = "newtype", Descriptions = null };
+            Car newCar = new Car() { Brand = "benz", Model = "newtype"};
             var result = _repository.UpdateCar(id,newCar);
             return Content(result.ToString());
         }

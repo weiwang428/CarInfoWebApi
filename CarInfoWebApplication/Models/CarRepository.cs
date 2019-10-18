@@ -12,8 +12,7 @@ namespace CarInfoWebApplication.Models
     public class CarRepository : ICarRepository
     {
         private readonly CarDbContext _dbContext;
-        private const string FILE_PATH = @"d:\config.txt";
-        //private const string FILE_PATH = Server.MapPath("config.txt");
+        private string filePath = HttpContext.Current.Server.MapPath("~/App_Data/config.txt");
         public CarRepository(CarDbContext db)
         {
             _dbContext = db;
@@ -49,12 +48,12 @@ namespace CarInfoWebApplication.Models
                 var file = httpRequest.Files[fileName];
                 if (file == null)
                     return false;
-                if (File.Exists(FILE_PATH))
+                if (File.Exists(filePath))
                 {
-                    File.Delete(FILE_PATH);
+                    File.Delete(filePath);
                 }
-                file.SaveAs(FILE_PATH);
-                string str = File.ReadAllText(FILE_PATH);
+                file.SaveAs(filePath);
+                string str = File.ReadAllText(filePath);
                 JsonSerializerSettings settings = new JsonSerializerSettings();
                 settings.Formatting = Formatting.Indented;
                 settings.NullValueHandling = NullValueHandling.Ignore;
@@ -101,7 +100,7 @@ namespace CarInfoWebApplication.Models
         {
             try
             {
-                StreamWriter sw = new StreamWriter(FILE_PATH);
+                StreamWriter sw = new StreamWriter(filePath);
                 Formatting format = Formatting.Indented;
                 sw.WriteLine(JsonConvert.SerializeObject(_dbContext.Cars.Include("Descriptions").ToList(), format));
                 //JsonSerializer serializer = new JsonSerializer();
